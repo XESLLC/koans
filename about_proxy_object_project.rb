@@ -1,5 +1,33 @@
 require File.expand_path(File.dirname(__FILE__) + '/neo')
 
+# class TV
+#   def initialize(channel_number)
+#     @channel_number = channel_number
+#   end
+#
+#   def change_channel(new_channel_number)
+#     @channel_number = new_channel_number
+#   end
+# end
+#
+# tv = TV.new(574)
+#
+# # 2 ways to call a method
+#
+# # 1. directly using dot notation
+# tv.change_channel(577)
+#
+# # 2. View this as passing a message to the tv instance, for it to change the channel:
+# tv.send(:change_channel, 579)
+
+
+
+#  def number_of_times_called(arg)
+#    @object.send(:number_of_times_called, arg)
+#  end
+#
+
+
 # Project: Create a Proxy Class
 #
 # In this assignment, create a proxy class (one is started for you
@@ -15,10 +43,25 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 class Proxy
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
+    @messages=[]
   end
-
-  # WRITE CODE HERE
+  def method_missing(method_name, *args)
+    @messages << method_name
+    @object.send(method_name, *args)
+  end
+  def messages
+    @messages
+  end
+  def called?(method_to_check)
+    @messages.any? { |method| method == method_to_check }
+  end
+  def number_of_times_called(method)
+    counts = Hash.new(0)
+    @messages.each do |message|
+      counts[message] += 1
+    end
+    counts[method]
+  end
 end
 
 # The proxy object should pass the following Koan:
